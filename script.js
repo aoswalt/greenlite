@@ -1,10 +1,31 @@
 "use strict";
+
+const lights = {
+  as1: $(".light1 .red"),
+  as2: $(".light1 .yellow"),
+  as3: $(".light1 .green"),
+  bs1: $(".light2 .red"),
+  bs2: $(".light2 .yellow"),
+  bs3: $(".light2 .green")
+};
+
+//NOTE(adam): object to hold bulb lit status
+const lightStatus = {};
+for(const k in lights) { lightStatus[k] = {lit: false}; }
+
 const mapping = {
   roadA: {
     S: [
-      [$(".red")],
-      [$(".yellow")],
-      [$(".green")]
+      [lightStatus.as1],
+      [lightStatus.as2],
+      [lightStatus.as3]
+    ]
+  },
+  roadB: {
+    S: [
+      [lightStatus.bs1],
+      [lightStatus.bs2],
+      [lightStatus.bs3]
     ]
   }
 };
@@ -12,28 +33,48 @@ const mapping = {
 const signal = {
   roadA: {
     L: 0,
-    S: 1,
+    S: 2,
+    R: 0
+  },
+  roadB: {
+    L: 0,
+    S: 0,
     R: 0
   }
 };
 
 
 function setLights(signal) {
-  Object.keys(signal).forEach((road) => {
-    Object.keys(mapping[road]).forEach(dir => {
+  const signalRoads = Object.keys(signal);
+
+  signalRoads.forEach((road) => {
+    const mappingDirections = Object.keys(mapping[road]);
+    mappingDirections.forEach(dir => {
+      const mapDir = mapping[road][dir];
       //NOTE(adam): toggle all off first
-      for(let i = 0; i < 3; ++i) {
-        mapping[road][dir][i].forEach(l => l.toggleClass("lit", false));
+      for(let signalNum = 0; signalNum < mapDir.length; ++signalNum) {
+        for(let lightNum = 0; lightNum < mapDir[signalNum].length; ++lightNum) {
+          mapDir[signalNum][lightNum].lit = false;
+        }
       }
     });
 
-    Object.keys(signal[road]).forEach(dir => {
-      //NOTE(adam): only operate on existing directions
+    const signalDirections = Object.keys(signal[road]);
+    signalDirections.forEach(dir => {
+      //NOTE(adam): only operate on existing mappingDirections
       if(mapping[road].hasOwnProperty(dir)) {
-        mapping[road][dir][signal[road][dir]].forEach(l => l.toggleClass("lit", true));
+        const mapDir = mapping[road][dir];
+        const signalNumber = signal[road][dir];
+        for(let statusIndex = 0; statusIndex < mapDir[signalNumber].length; ++statusIndex) {
+          const status = mapDir[signalNumber][statusIndex];
+          status.lit = true;
+        }
       }
     });
   });
+
+  for(const k in lightStatus) { lights[k].toggleClass("lit", lightStatus[k].lit); }
+
 }
 
 setLights(signal);
