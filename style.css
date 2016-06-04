@@ -1,5 +1,4 @@
-.light1,
-.light2 {
+.light {
   display: inline-block;
   border: 1px solid black;
   height: 300px;

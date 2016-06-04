@@ -1,12 +1,15 @@
 "use strict";
 
 const lights = {
-  as1: $(".light1 .red"),
-  as2: $(".light1 .yellow"),
-  as3: $(".light1 .green"),
-  bs1: $(".light2 .red"),
-  bs2: $(".light2 .yellow"),
-  bs3: $(".light2 .green")
+  a1r: $(".lighta1 .red"),
+  a1y: $(".lighta1 .yellow"),
+  a1g: $(".lighta1 .green"),
+  a2r: $(".lighta2 .red"),
+  a2y: $(".lighta2 .yellow"),
+  a2g: $(".lighta2 .green"),
+  b1r: $(".lightb1 .red"),
+  b1y: $(".lightb1 .yellow"),
+  b1g: $(".lightb1 .green")
 };
 
 //NOTE(adam): object to hold bulb lit status
@@ -16,16 +19,16 @@ for(const k in lights) { lightStatus[k] = {lit: false}; }
 const mapping = {
   roadA: {
     S: [
-      [lightStatus.as1],
-      [lightStatus.as2],
-      [lightStatus.as3]
+      [lightStatus.a1r, lightStatus.a2r],
+      [lightStatus.a1y, lightStatus.a2y],
+      [lightStatus.a1g, lightStatus.a2g]
     ]
   },
   roadB: {
     S: [
-      [lightStatus.bs1],
-      [lightStatus.bs2],
-      [lightStatus.bs3]
+      [lightStatus.b1r],
+      [lightStatus.b1y],
+      [lightStatus.b1g]
     ]
   }
 };
