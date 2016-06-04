@@ -4,6 +4,7 @@ const lights = {
   a1r: $(".lighta1 .red"),
   a1y: $(".lighta1 .yellow"),
   a1g: $(".lighta1 .green"),
+  a1gl: $(".lighta1 .greenLeft"),
   a2r: $(".lighta2 .red"),
   a2y: $(".lighta2 .yellow"),
   a2g: $(".lighta2 .green"),
@@ -18,6 +19,11 @@ for(const k in lights) { lightStatus[k] = {lit: false}; }
 
 const mapping = {
   roadA: {
+    L: [
+      [{}],
+      [{}],
+      [lightStatus.a1gl]
+    ],
     S: [
       [lightStatus.a1r, lightStatus.a2r],
       [lightStatus.a1y, lightStatus.a2y],
@@ -81,4 +87,3 @@ function setLights(signal) {
 }
 
 setLights(signal);
-// mapping.roadA.S[1][0].toggleClass("lit", true);
