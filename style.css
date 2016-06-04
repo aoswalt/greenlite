@@ -1,0 +1,24 @@
+.light {
+  border: 1px solid black;
+  height: 300px;
+  width: 100px;
+}
+
+.red,
+.yellow,
+.green {
+  border: 1px solid black;
+  height: 100px;
+}
+
+.red.lit {
+  background-color: red;
+}
+
+.yellow.lit {
+  background-color: yellow;
+}
+
+.green.lit {
+  background-color: green;
+}
