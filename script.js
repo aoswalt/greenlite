@@ -39,17 +39,48 @@ const mapping = {
   }
 };
 
-const signal = {
-  roadA: {
-    L: 0,
-    S: 2,
-    R: 0
-  },
-  roadB: {
-    L: 0,
-    S: 0,
-    R: 0
-  }
+const schedule = {
+  emergency: null,
+  events: null,
+  construction: null,
+  scheduler: null,
+  base: {}
+};
+
+const payload = {
+  priority: 2,
+  signals: [{
+    startTime: 0,
+    endTime: 0,
+    repeat: true,
+    expireTime: 0,
+    list: [
+      {
+        roadA: {
+          L: 0,
+          S: 2,
+          R: 0
+        },
+        roadB: {
+          L: 0,
+          S: 0,
+          R: 0
+        }
+      },
+      {
+        roadA: {
+          L: 2,
+          S: 1,
+          R: 0
+        },
+        roadB: {
+          L: 0,
+          S: 2,
+          R: 0
+        }
+      }
+    ]
+  }]
 };
 
 
@@ -83,7 +114,16 @@ function setLights(signal) {
   });
 
   for(const k in lightStatus) { lights[k].toggleClass("lit", lightStatus[k].lit); }
-
 }
 
-setLights(signal);
+function pushPayload(level, data) {
+  schedule[level] = data;
+}
+
+pushPayload("base", payload);
+
+let i = 0;
+setInterval(() => {
+  setLights(schedule.base.signals[0].list[i++]);
+  if(i >= schedule.base.signals[0].list.length) { i = 0; }
+}, 1000);
