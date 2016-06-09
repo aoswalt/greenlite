@@ -134,6 +134,9 @@ setInterval(() => {
     if(schedule[label]) {
       //TODO(adam): determine if signal applies now
       activeSignalList = schedule[label].signals[0].list;
+      if(i >= activeSignalList.length && !activeSignalList.repeat) {
+        i = 0;
+      }
     }
   });
 
