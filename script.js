@@ -1,3 +1,5 @@
+"use strict";
+
 const lights = {
   a1r: $(".lighta1 .red"),
   a1y: $(".lighta1 .yellow"),
@@ -15,8 +17,6 @@ const lights = {
 const lightStatus = {};
 for(const k in lights) { lightStatus[k] = {lit: false}; }
 
-//NOTE(adam): mapping of lights to road turn directions
-//NOTE(adam): should only be set at setup
 const mapping = {
   roadA: {
     L: [
@@ -42,16 +42,13 @@ const mapping = {
 const schedule = {
   emergency: null,
   events: null,
-  repeats: null,
-  planner: null
+  construction: null,
+  scheduler: null,
+  base: {}
 };
 
-//NOTE(adam): order used for priority
-const scheduleLabels = ["emergency", "events", "repeats", "planner"];
-
-//NOTE(adam): fallback schedule with simple timing
-const baseSchedule = {
-  priority: "base",
+const payload = {
+  priority: 2,
   signals: [{
     startTime: 0,
     endTime: 0,
@@ -59,35 +56,35 @@ const baseSchedule = {
     expireTime: 0,
     list: [
       {
-        roadA: {L: 2, S: 2, R: 0 },
-        roadB: {L: 0, S: 0, R: 0 }
+        roadA: {
+          L: 0,
+          S: 2,
+          R: 0
+        },
+        roadB: {
+          L: 0,
+          S: 0,
+          R: 0
+        }
       },
       {
-        roadA: {L: 2, S: 2, R: 0 },
-        roadB: {L: 0, S: 0, R: 0 }
-      },
-      {
-        roadA: {L: 0, S: 2, R: 0 },
-        roadB: {L: 0, S: 0, R: 0 }
-      },
-      {
-        roadA: {L: 0, S: 1, R: 0 },
-        roadB: {L: 0, S: 0, R: 0 }
-      },
-      {
-        roadA: {L: 0, S: 1, R: 0 },
-        roadB: {L: 0, S: 0, R: 0 }
-      },
-      {
-        roadA: {L: 0, S: 0, R: 0 },
-        roadB: {L: 0, S: 2, R: 0 }
+        roadA: {
+          L: 2,
+          S: 1,
+          R: 0
+        },
+        roadB: {
+          L: 0,
+          S: 2,
+          R: 0
+        }
       }
     ]
   }]
 };
 
-//NOTE(adam): set lights status based on active signal list
-function setLightsStatus(signal) {
+
+function setLights(signal) {
   const signalRoads = Object.keys(signal);
 
   signalRoads.forEach((road) => {
@@ -116,18 +113,16 @@ function setLightsStatus(signal) {
     });
   });
 
-  //NOTE(adam): set light based on status
   for(const k in lightStatus) { lights[k].toggleClass("lit", lightStatus[k].lit); }
 }
 
-//NOTE(adam): "public" access point for setting a schedule
-function pushSchedule(data) {
-  schedule[data.priority] = data;
+function pushPayload(level, data) {
+  schedule[level] = data;
 }
 
-//NOTE(adam): timing loop
+pushPayload("base", payload);
+
 let i = 0;
-let activeSignalList = null;
 setInterval(() => {
   //NOTE(adam): order is important
   scheduleLabels.forEach(label => {
@@ -149,29 +144,8 @@ setInterval(() => {
   setLightsStatus(activeSignalList[i++]);
 
   //TODO(adam): determine if schedule(s) expired
+=======
+  setLights(schedule.base.signals[0].list[i++]);
+  if(i >= schedule.base.signals[0].list.length) { i = 0; }
+>>>>>>> parent of 9e34d7b... cleanup and simple schedule stack lookup
 }, 1000);
-
-
-const plannerBlock = {
-  priority: "planner",
-  signals: [{
-    startTOD: 0,
-    endTOD: 0,
-    startTime: 0,
-    endTime: 0,
-    repeat: false,
-    expireTime: 0,
-    list: [
-      {
-        roadA: {L: 2, S: 0, R: 0 },
-        roadB: {L: 0, S: 0, R: 0 }
-      },
-      {
-        roadA: {L: 0, S: 0, R: 0 },
-        roadB: {L: 0, S: 1, R: 0 }
-      }
-    ]
-  }]
-};
-
-// pushSchedule(plannerBlock);
