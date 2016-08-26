@@ -47,6 +47,9 @@ const schedule = {
   base: {}
 };
 
+//NOTE(adam): order used for priority
+const scheduleLabels = ["emergency", "events", "repeats", "planner", "base"];
+
 const payload = {
   priority: 2,
   signals: [{
@@ -56,28 +59,12 @@ const payload = {
     expireTime: 0,
     list: [
       {
-        roadA: {
-          L: 0,
-          S: 2,
-          R: 0
-        },
-        roadB: {
-          L: 0,
-          S: 0,
-          R: 0
-        }
+        roadA: { L: 0, S: 2, R: 0 },
+        roadB: { L: 0, S: 0, R: 0 }
       },
       {
-        roadA: {
-          L: 2,
-          S: 1,
-          R: 0
-        },
-        roadB: {
-          L: 0,
-          S: 2,
-          R: 0
-        }
+        roadA: { L: 2, S: 1, R: 0 },
+        roadB: { L: 0, S: 2, R: 0 }
       }
     ]
   }]
@@ -123,6 +110,7 @@ function pushPayload(level, data) {
 pushPayload("base", payload);
 
 let i = 0;
+let activeSignalList = null;
 setInterval(() => {
   //NOTE(adam): order is important
   scheduleLabels.forEach(label => {
@@ -140,12 +128,6 @@ setInterval(() => {
     activeSignalList = baseSchedule.signals[0].list;
   }
 
-  if(i >= activeSignalList.length) { i = 0; }
-  setLightsStatus(activeSignalList[i++]);
-
-  //TODO(adam): determine if schedule(s) expired
-=======
   setLights(schedule.base.signals[0].list[i++]);
   if(i >= schedule.base.signals[0].list.length) { i = 0; }
->>>>>>> parent of 9e34d7b... cleanup and simple schedule stack lookup
 }, 1000);
