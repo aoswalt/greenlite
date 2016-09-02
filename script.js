@@ -1,5 +1,7 @@
 'use strict'
 
+let currentTime = Date.now()
+
 const lights = {
   a1r: $('.lighta1 .red'),
   a1y: $('.lighta1 .yellow'),
@@ -41,10 +43,7 @@ const mapping = {
 
 //NOTE(adam): order is priority
 const scheduleLabels = ['emergency', 'single', 'repeat', 'day', 'base']
-
-const schedule = {
-  base: {}
-}
+const schedule = {}
 
 //NOTE(adam): add labels to schedule
 scheduleLabels.forEach(l => schedule[l] = null)
@@ -70,7 +69,7 @@ const payload = {
   label: 'repeat',
   signals: [{
     startTime: 0,
-    endTime: 0,
+    endTime: Date.now() + 6000,
     repeat: true,
     expireTime: 0,
     list: [
@@ -123,7 +122,7 @@ function pushPayload(data) {
   if(scheduleLabels.indexOf(data.label) > -1) {
     schedule[data.label] = data
   } else {
-    console.log("invalid payload label", data.label);
+    console.log("invalid payload label", data.label)
   }
 }
 
@@ -131,18 +130,21 @@ pushPayload(basePayload)
 // pushPayload(payload)
 
 let i = 0
-let activeSignalList = null
 setInterval(() => {
+  let activeSignalList = null
   //NOTE(adam): order is important
-  // scheduleLabels.forEach(label => {
   for(const label of scheduleLabels) {
-    if(schedule[label]) {
+    let currSchedule = schedule[label];
+    if(currSchedule) {
       //TODO(adam): if signal applies now
-      activeSignalList = schedule[label].signals[0].list
-      if(i >= activeSignalList.length && !activeSignalList.repeat) {
-        i = 0
+      for(const signal of currSchedule.signals) {
+        if(signal.startTime && currentTime < signal.startTime) { continue }
+        if(signal.endTime && signal.endTime < currentTime) { continue }
+
+        activeSignalList = signal.list;
+        break
       }
-      break
+      if(activeSignalList) { break }
     }
   }
 
@@ -151,6 +153,8 @@ setInterval(() => {
     activeSignalList = schedule.base.signals[0].list
   }
 
+  i %= activeSignalList.length;
   setLights(activeSignalList[i++])
   if(i >= activeSignalList.length) { i = 0 }
+  currentTime = Date.now()
 }, 1000)
