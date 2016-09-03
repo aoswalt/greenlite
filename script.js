@@ -48,43 +48,6 @@ const schedule = {}
 //NOTE(adam): add labels to schedule
 scheduleLabels.forEach(l => schedule[l] = null)
 
-const basePayload = {
-  label: 'base',
-  signals: [{
-    repeat: true,
-    list: [
-      {
-        roadA: {L:0, S:0, R:0},
-        roadB: {L:0, S:1, R:0},
-      },
-      {
-        roadA: {L:0, S:1, R:0},
-        roadB: {L:0, S:0, R:0},
-      },
-    ]
-  }]
-}
-
-const payload = {
-  label: 'repeat',
-  signals: [{
-    startTime: 0,
-    endTime: Date.now() + 6000,
-    repeat: true,
-    expireTime: 0,
-    list: [
-      {
-        roadA: {L:0, S:2, R:0},
-        roadB: {L:0, S:0, R:0}
-      },
-      {
-        roadA: {L:2, S:1, R:0},
-        roadB: {L:0, S:2, R:0}
-      }
-    ]
-  }]
-}
-
 
 function setLights(signal) {
   const signalRoads = Object.keys(signal)
@@ -126,8 +89,6 @@ function pushPayload(data) {
   }
 }
 
-pushPayload(basePayload)
-// pushPayload(payload)
 
 let i = 0
 setInterval(() => {
