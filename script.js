@@ -19,12 +19,38 @@ Object.keys(mappingLabels).forEach(road => {
   })
 })
 
-//NOTE(adam): order is priority
-const scheduleLabels = ['emergency', 'single', 'repeat', 'day', 'base']
-const schedule = {}
-scheduleLabels.forEach(l => schedule[l] = null) //NOTE(adam): add labels to schedule
+const schedule = []
 
+/**
+ * Add a new entry to the schedule
+ * @param {object} entry - The new schedule entry to add
+ */
+function addScheduleEntry(entry) {
+  if(!entry.hasOwnProperty('priority')) {
+    console.error("No priority for schedule", entry)
+    return
+  }
 
+  if(schedule.find(e => e.priority === entry.priority)) {
+    console.error("Entry already exists for priority ", entry.priority)
+    return
+  }
+
+  schedule.push(entry)
+  sortSchedule()
+}
+
+/**
+ * Sort schedule to have higher priority entries first
+ */
+function sortSchedule() {
+  schedule.sort((a, b) => b.priority - a.priority)
+}
+
+/**
+ * Set lights from signal
+ * @param {object} signal - The signal to control the lights
+ */
 function setLights(signal) {
   const signalRoads = Object.keys(signal)
 
@@ -47,44 +73,25 @@ function setLights(signal) {
     })
   })
 
-  Object.keys(lightStatus).forEach(k => lights[k].toggleClass('lit', lightStatus[k].lit) )
-}
-
-function pushPayload(data) {
-  if(scheduleLabels.indexOf(data.label) > -1) {
-    schedule[data.label] = data
-  } else {
-    console.error("invalid payload label", data.label)
-  }
+  Object.keys(lightStatus).forEach(k => lights[k].toggleClass('lit', lightStatus[k].lit))
 }
 
 
 let i = 0
 setInterval(() => {
-  let activeSignalList = null
-  //NOTE(adam): order is important
-  //NOTE(adam): cannot break a forEach
-  for(const label of scheduleLabels) {
-    const currSchedule = schedule[label];
-    if(currSchedule) {
-      //NOTE(adam): cannot break a forEach
-      for(const signal of currSchedule.signals) {
-        if(signal.startTime && currentTime < signal.startTime) { continue }
-        if(signal.endTime && signal.endTime < currentTime) { continue }
+  let entrySignals = null
+  for(const entry of schedule) {
+    if(entry.startTime && currentTime < entry.startTime) { continue }
+    if(entry.endTime && entry.endTime < currentTime) { continue }
 
-        activeSignalList = signal.list;
-        break
-      }
-      if(activeSignalList) { break }
-    }
+    entrySignals = entry.signals
+    break
   }
 
-  //NOTE(adam): fall back to base schedule if nothing applies
-  if(!activeSignalList) {
-    activeSignalList = schedule.base.signals[0].list
-  }
+  //TODO(adam): add fallback signal pattern
 
-  i %= activeSignalList.length;
-  setLights(activeSignalList[i++])
+  //TODO(adam): add time-based signal indexing
+  i %= entrySignals.length
+  setLights(entrySignals[i++])
   currentTime = Date.now()
 }, 1000)

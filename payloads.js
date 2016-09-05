@@ -1,4 +1,4 @@
-const basePayload = {
+const baseEntry = {
   priority: 0,
   repeat: true,
   signals: [
@@ -13,7 +13,7 @@ const basePayload = {
   ]
 }
 
-const payload = {
+const entry = {
   priority: 5,
   startTime: 0,
   endTime: Date.now() + 6000,
@@ -31,5 +31,5 @@ const payload = {
   ]
 }
 
-pushPayload(basePayload)
-// pushPayload(payload)
+addScheduleEntry(baseEntry)
+// addScheduleEntry(entry)
