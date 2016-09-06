@@ -33,3 +33,8 @@ const entry = {
 
 addScheduleEntry(baseEntry)
 // addScheduleEntry(entry)
+
+updateEntryEnd = () => {
+  entry.endTime = Date.now() + 6000
+  return entry
+}

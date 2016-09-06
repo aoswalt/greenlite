@@ -25,15 +25,28 @@ const schedule = []
  * Add a new entry to the schedule
  * @param {object} entry - The new schedule entry to add
  */
-function addScheduleEntry(entry) {
+function addScheduleEntry(entry) { setScheduleEntry(entry, false) }
+
+/**
+ * Set a new schedule entry, overwriting if same priority exists
+ * @param {object} entry - The schedule entry to add
+ * @param {boolean} allowOverwrite - Allow overwriting existing priorities
+ */
+function setScheduleEntry(entry, allowOverwrite=true) {
   if(!entry.hasOwnProperty('priority')) {
     console.error("No priority for schedule", entry)
     return
   }
 
-  if(schedule.find(e => e.priority === entry.priority)) {
-    console.error("Entry already exists for priority ", entry.priority)
-    return
+  let existing = null
+  if(existing = schedule.find(e => e.priority === entry.priority)) {
+    if(allowOverwrite) {
+      console.warn("Overwriting priority", existing.priority)
+      schedule.splice(schedule.indexOf(existing))
+    } else {
+      console.error("Entry already exists for priority ", existing.priority)
+      return
+    }
   }
 
   schedule.push(entry)
