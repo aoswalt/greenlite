@@ -1,7 +1,5 @@
 'use strict'
 
-let currentTime = Date.now()
-
 //NOTE(adam): object to hold bulb lit status
 const lightStatus = {}
 Object.keys(lights).forEach(k => lightStatus[k] = {lit: false})
@@ -90,6 +88,7 @@ function setLights(signal) {
 }
 
 
+let currentTime = Date.now()
 let i = 0
 setInterval(() => {
   let entrySignals = disabledPattern.signals
@@ -101,10 +100,8 @@ setInterval(() => {
     break
   }
 
-  //TODO(adam): add fallback signal pattern
-
-  //TODO(adam): add time-based signal indexing
-  i %= entrySignals.length
+  //NOTE(adam): time-based signal indexing
+  i = parseInt((currentTime - entry.startTime) / 1000) % entrySignals.length
   setLights(entrySignals[i++])
   currentTime = Date.now()
 }, 1000)

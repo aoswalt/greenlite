@@ -1,6 +1,6 @@
 const entry = {
   priority: 5,
-  startTime: 0,
+  startTime: Date.now(),
   endTime: Date.now() + 6000,
   repeat: true,
   expireTime: 0,
