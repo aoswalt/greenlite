@@ -33,25 +33,17 @@ const mappingLabels = {
   }
 }
 
-
-// const mapping = {
-//   roadA: {
-//     L: [
-//       [{}],
-//       [{}],
-//       [lightStatus.a1gl]
-//     ],
-//     S: [
-//       [lightStatus.a1r, lightStatus.a2r],
-//       [lightStatus.a1y, lightStatus.a2y],
-//       [lightStatus.a1g, lightStatus.a2g]
-//     ]
-//   },
-//   roadB: {
-//     S: [
-//       [lightStatus.b1r],
-//       [lightStatus.b1y],
-//       [lightStatus.b1g]
-//     ]
-//   }
-// }
+const disabledPattern = {
+  priority: 0,
+  repeat: true,
+  signals: [
+    {
+      roadA: {},
+      roadB: {L:0, S:0, R:0},
+    },
+    {
+      roadA: {L:0, S:0, R:0},
+      roadB: {},
+    },
+  ]
+}

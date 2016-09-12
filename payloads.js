@@ -1,18 +1,3 @@
-const baseEntry = {
-  priority: 0,
-  repeat: true,
-  signals: [
-    {
-      roadA: {},
-      roadB: {L:0, S:0, R:0},
-    },
-    {
-      roadA: {L:0, S:0, R:0},
-      roadB: {},
-    },
-  ]
-}
-
 const entry = {
   priority: 5,
   startTime: 0,
@@ -31,7 +16,6 @@ const entry = {
   ]
 }
 
-addScheduleEntry(baseEntry)
 // addScheduleEntry(entry)
 
 updateEntryEnd = () => {

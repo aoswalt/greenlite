@@ -92,7 +92,7 @@ function setLights(signal) {
 
 let i = 0
 setInterval(() => {
-  let entrySignals = null
+  let entrySignals = disabledPattern.signals
   for(const entry of schedule) {
     if(entry.startTime && currentTime < entry.startTime) { continue }
     if(entry.endTime && entry.endTime < currentTime) { continue }
