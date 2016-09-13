@@ -9,7 +9,10 @@ class Vertex(models.Model):
     last_seen = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return '{}: {} @ {}'.format(self.id, self.label, self.address)
+        return '{} @ {}'.format(self.label, self.address)
+
+    class Meta:
+        ordering = ('label',)
 
 class EventRequest(models.Model):
     requester = models.ForeignKey(User)
