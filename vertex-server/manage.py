@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+import signals
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vertex.settings")
@@ -19,4 +20,11 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
+
+    # start threads for scheduale processing and lighting if not running and on main thread
+    if sys.argv[1] == 'runserver' and os.environ.get('RUN_MAIN') != 'true':
+        print('Starting threads')
+        signals.schedule.start()
+        signals.lights.start()
+
     execute_from_command_line(sys.argv)
