@@ -10,11 +10,16 @@ def start():
     global thread
     if thread: return
 
-    thread = threading.Thread(target=test_run)
+    thread = ScheduleThread()
     thread.start()
 
-def test_run():
-    print('Schedule thread started.')
-    print('Schedule: Zzz')
-    time.sleep(4)
-    print('Schedule: Done!')
+class ScheduleThread(threading.Thread):
+    def run(self):
+        self.events = []
+
+        while True:
+            print('events', self.events)
+            time.sleep(1)
+
+    def add_event(self, event, overwrite=False):
+        self.events.append(event)
