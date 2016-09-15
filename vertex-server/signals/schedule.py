@@ -18,7 +18,7 @@ def start():
     thread.start()
 
     time.sleep(2)
-    thread.add_event(test.entry)
+    add_event(test.entry)
 
 class ScheduleThread(threading.Thread):
     """Thread subclass for manipulating the working with the event list.
@@ -66,31 +66,6 @@ class ScheduleThread(threading.Thread):
             self.current_time = time.time()
             time.sleep(1)
 
-    def add_event(self, event, allow_overwrite=False):
-        """Add a new event to the schedule.
-
-        Arguments:
-            event               the new event to be added
-            allow_overwrite     is overwriting an existing priority allowed
-                                Default = False
-        """
-        if not 'priority' in event:
-            print('ERROR: No priority for event:\n{}'.format(event))
-            return 1
-
-        # get existing event with same priority if exists
-        existing = next((e for e in self.events if e['priority'] == event['priority']), None)
-        if existing:
-            if allow_overwrite:
-                print('WARN: Overwriting event with priority {}'.format(existing['priority']))
-                self.events.remove(existing)
-            else:
-                print('ERROR: Entry already exists for priority {}'.format(existing['priority']))
-                return 1
-
-        self.events.append(event)
-        self.sort_events()
-
     def sort_events(self):
         """Sort events in descending priority
         """
@@ -120,10 +95,7 @@ class ScheduleThread(threading.Thread):
         """Push the appropriate LED pins to the lights thread from the active lights.
         """
         active_pin_pairs = self.get_active_pin_pairs_from_light_status()
-
-        # ensure lights thread is active
-        if lights.thread:
-            lights.thread.set_active_pin_pairs(active_pin_pairs)
+        lights.set_active_pin_pairs(active_pin_pairs)
 
     def get_active_pin_pairs_from_light_status(self):
         """Get the pairs of pins that should be active for each lit light.
@@ -133,3 +105,32 @@ class ScheduleThread(threading.Thread):
             for light in self.light_status
             if self.light_status[light]['lit']]
         return active_pin_pairs
+
+def add_event(event, allow_overwrite=False):
+    """Add a new event to the schedule.
+
+    Arguments:
+        event               the new event to be added
+        allow_overwrite     is overwriting an existing priority allowed
+                            Default = False
+    """
+    if not thread:
+        print('WARN: schedule thread not found')
+        return 1
+
+    if not 'priority' in event:
+        print('ERROR: No priority for event:\n{}'.format(event))
+        return 1
+
+    # get existing event with same priority if exists
+    existing = next((e for e in thread.events if e['priority'] == event['priority']), None)
+    if existing:
+        if allow_overwrite:
+            print('WARN: Overwriting event with priority {}'.format(existing['priority']))
+            thread.events.remove(existing)
+        else:
+            print('ERROR: Entry already exists for priority {}'.format(existing['priority']))
+            return 1
+
+    thread.events.append(event)
+    thread.sort_events()

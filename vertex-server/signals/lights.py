@@ -29,14 +29,6 @@ class LightsThread(threading.Thread):
             self.cycle_active_pins()
             time.sleep(self.delay * 100)
 
-    def set_active_pin_pairs(self, active_pin_pairs):
-        """External function to set the active pin pairs
-
-        Arguments:
-            active_pin_pairs    the new group of active pin pairs
-        """
-        self.active_pin_pairs = active_pin_pairs
-
     def cycle_active_pins(self):
         """Cycle the LED pins for the active pin pairs
         """
@@ -59,3 +51,15 @@ class LightsThread(threading.Thread):
             # pair[1].on()
             self.last_pair = pair
             time.sleep(self.delay)
+
+def set_active_pin_pairs(active_pin_pairs):
+    """External function to set the active pin pairs
+
+    Arguments:
+        active_pin_pairs    the new group of active pin pairs
+    """
+    if not thread:
+        print('WARN: lights thread not found')
+        return 1
+
+    thread.active_pin_pairs = active_pin_pairs
