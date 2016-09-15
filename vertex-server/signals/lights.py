@@ -15,11 +15,15 @@ def start():
 
 class LightsThread(threading.Thread):
     def run(self):
-        self.active_pins = tuple()
+        self.active_pin_pairs = (tuple(),)
 
         while True:
-            print('active_pins', self.active_pins)
+            print('active_pins', self.active_pin_pairs)
             time.sleep(1)
 
-    def set_active_pins(self, active_pins):
-        self.active_pins = active_pins
+    def set_active_pin_pairs(self, active_pin_pairs):
+        self.active_pin_pairs = active_pin_pairs
+
+    def cycle_active_pins(self):
+        for pairs in self.active_pin_pairs:
+            pass

@@ -1,4 +1,3 @@
-from itertools import chain
 import operator
 import threading
 import time
@@ -99,16 +98,15 @@ class ScheduleThread(threading.Thread):
                             light['lit'] = True
 
     def push_to_lights_thread(self):
-        active_pins = self.get_active_pins_from_light_status()
+        active_pin_pairs = self.get_active_pin_pairs_from_light_status()
 
         # ensure lights thread is active
         if lights.thread:
-            lights.thread.set_active_pins(active_pins)
+            lights.thread.set_active_pin_pairs(active_pin_pairs)
 
-    def get_active_pins_from_light_status(self):
+    def get_active_pin_pairs_from_light_status(self):
         active_pin_pairs = [
             light_pins[light]
             for light in self.light_status
             if self.light_status[light]['lit']]
-        active_pins = tuple(chain.from_iterable(active_pin_pairs))
-        return active_pins
+        return active_pin_pairs
