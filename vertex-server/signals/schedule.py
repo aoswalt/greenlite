@@ -1,7 +1,6 @@
 import operator
 import threading
 import time
-from pprint import pprint
 
 from .config import *
 from . import test
@@ -17,20 +16,6 @@ def start():
 
     thread = ScheduleThread()
     thread.start()
-
-    # time.sleep(3)
-    # thread.add_event({'a':'thing'})
-    # time.sleep(2)
-    # thread.add_event({'a':'thing 2', 'priority':2})
-    # time.sleep(2)
-    # thread.add_event({'a':'thing 2b', 'priority':2})
-    # time.sleep(2)
-    # thread.add_event({'a':'thing 2c', 'priority':2}, True)
-    # time.sleep(2)
-    # thread.add_event({'a':'thing 1', 'priority':1})
-    # time.sleep(2)
-    # thread.add_event({'a':'thing 3', 'priority':3})
-    # time.sleep(2)
 
     time.sleep(2)
     thread.add_event(test.entry)
@@ -52,14 +37,28 @@ class ScheduleThread(threading.Thread):
 
         self.events = []
 
+        self.current_time = time.time()
         while True:
-            print('events\n')
-            [pprint(e) for e in self.events]
+            entry = disabled_pattern
+            for e in self.events:
+                if 'startTime' in e and self.current_time < e['startTime']:
+                    continue
 
+                if 'endTime' in e and e['endTime'] < self.current_time:
+                    continue
+
+                entry = e
+                break
+
+            if 'startTime' in entry:
+                index = int(self.current_time - entry['startTime'] / 1000) % len(entry['signals'])
+            else:
+                index = int(self.current_time / 1000) % len(entry['signals'])
+
+            self.set_lights(entry['signals'][index])
+
+            self.current_time = time.time()
             time.sleep(1)
-            print('setting lights')
-            if len(self.events) > 0:
-                self.set_lights(self.events[0]['signals'][0])
 
     def add_event(self, event, allow_overwrite=False):
         if not 'priority' in event:
@@ -96,5 +95,4 @@ class ScheduleThread(threading.Thread):
 
                         for light in map_dir[signal_num]:
                             light['lit'] = True
-
-        pprint(self.mapping)
+        print('Set lights to \n{}'.format(signal))

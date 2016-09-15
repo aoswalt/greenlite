@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
+from time import time
 
 entry = {
     'priority': 5,
-    'startTime': datetime.now(),
-    'endTime': datetime.now() + timedelta(seconds=6),
+    'startTime': time(),
+    'endTime': time() + 6000, 
     'repeat': True,
     'signals': [
         {
