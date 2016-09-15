@@ -15,7 +15,12 @@ def start():
     thread.start()
 
 class LightsThread(threading.Thread):
+    """Thread subclass for manipulating the LED gpio pins.
+    """
+
     def run(self):
+        """The entry point of a thread.start()
+        """
         self.active_pin_pairs = (tuple(),)
         self.last_pair = tuple()
         self.delay = 0.01
@@ -25,9 +30,16 @@ class LightsThread(threading.Thread):
             time.sleep(self.delay * 100)
 
     def set_active_pin_pairs(self, active_pin_pairs):
+        """External function to set the active pin pairs
+
+        Arguments:
+            active_pin_pairs    the new group of active pin pairs
+        """
         self.active_pin_pairs = active_pin_pairs
 
     def cycle_active_pins(self):
+        """Cycle the LED pins for the active pin pairs
+        """
         # os.system('cls')  # for Windows
         os.system('clear')  # for Linux/OS X
 
