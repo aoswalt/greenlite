@@ -1,6 +1,8 @@
 import threading
 import time
 
+from .config import *
+
 global thread
 thread = None
 
