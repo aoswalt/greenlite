@@ -1,9 +1,10 @@
+from itertools import chain
 import operator
 import threading
 import time
 
 from .config import *
-from . import test
+from . import lights, test
 
 global thread
 thread = None
@@ -56,6 +57,7 @@ class ScheduleThread(threading.Thread):
                 index = int(self.current_time / 1000) % len(entry['signals'])
 
             self.set_lights(entry['signals'][index])
+            self.push_to_lights_thread()
 
             self.current_time = time.time()
             time.sleep(1)
@@ -95,4 +97,18 @@ class ScheduleThread(threading.Thread):
 
                         for light in map_dir[signal_num]:
                             light['lit'] = True
-        print('Set lights to \n{}'.format(signal))
+
+    def push_to_lights_thread(self):
+        active_pins = self.get_active_pins_from_light_status()
+
+        # ensure lights thread is active
+        if lights.thread:
+            lights.thread.set_active_pins(active_pins)
+
+    def get_active_pins_from_light_status(self):
+        active_pin_pairs = [
+            light_pins[light]
+            for light in self.light_status
+            if self.light_status[light]['lit']]
+        active_pins = tuple(chain.from_iterable(active_pin_pairs))
+        return active_pins
