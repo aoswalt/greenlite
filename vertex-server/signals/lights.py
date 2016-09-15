@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 
@@ -16,14 +17,33 @@ def start():
 class LightsThread(threading.Thread):
     def run(self):
         self.active_pin_pairs = (tuple(),)
+        self.last_pair = tuple()
+        self.delay = 0.01
 
         while True:
-            print('active_pins', self.active_pin_pairs)
-            time.sleep(1)
+            self.cycle_active_pins()
+            time.sleep(self.delay * 100)
 
     def set_active_pin_pairs(self, active_pin_pairs):
         self.active_pin_pairs = active_pin_pairs
 
     def cycle_active_pins(self):
-        for pairs in self.active_pin_pairs:
-            pass
+        # os.system('cls')  # for Windows
+        os.system('clear')  # for Linux/OS X
+
+        if self.active_pin_pairs[0]:
+            pins0 = [p[0] for p in self.active_pin_pairs]
+            pins1 = [p[1] for p in self.active_pin_pairs]
+            print(''.join([('*' if i in pins0 else '_') for i in range(1, 9)]))
+            print(''.join([('*' if i in pins1 else '_') for i in range(1, 9)]))
+        for pair in self.active_pin_pairs:
+            if self.last_pair:
+                print('LED({}).off() LED({}).off()'.format(self.last_pair[0], self.last_pair[1]))
+            if self.active_pin_pairs[0]:
+                print('LED({}).on()  LED({}).on()'.format(pair[0], pair[1]))
+            # self.last_pair[0].off()
+            # self.last_pair[1].off()
+            # pair[0].on()
+            # pair[1].on()
+            self.last_pair = pair
+            time.sleep(self.delay)
