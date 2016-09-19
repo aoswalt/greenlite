@@ -56,9 +56,9 @@ class ScheduleThread(threading.Thread):
                 break
 
             if 'startTime' in entry:
-                index = int(self.current_time - entry['startTime'] / 1000) % len(entry['signals'])
+                index = int(self.current_time - entry['startTime']) % len(entry['signals'])
             else:
-                index = int(self.current_time / 1000) % len(entry['signals'])
+                index = int(self.current_time) % len(entry['signals'])
 
             self.set_lights(entry['signals'][index])
             self.push_to_lights_thread()
@@ -134,3 +134,5 @@ def add_event(event, allow_overwrite=False):
 
     thread.events.append(event)
     thread.sort_events()
+
+    print('thread.events', thread.events)

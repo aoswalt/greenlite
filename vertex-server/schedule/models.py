@@ -1,13 +1,13 @@
+import time
 from django.db import models
-from django.utils import timezone
 
 class Event(models.Model):
     priority = models.IntegerField()
-    start_time = models.DateTimeField(default=timezone.now)
-    end_time = models.DateTimeField(default=timezone.now)
+    start_time = models.BigIntegerField(default=time.time)
+    end_time = models.BigIntegerField(default=time.time)
     repeat = models.BooleanField(default=False)
-    expire_time = models.DateTimeField()
+    expire_time = models.BigIntegerField(null=True, blank=True)
     signals_text = models.TextField()
 
     def is_expired(self):
-        return timezone.now() >= expire_time
+        return time.time() >= expire_time

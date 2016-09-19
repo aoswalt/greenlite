@@ -33,7 +33,7 @@ class LightsThread(threading.Thread):
         """Cycle the LED pins for the active pin pairs
         """
         # os.system('cls')  # for Windows
-        os.system('clear')  # for Linux/OS X
+        # os.system('clear')  # for Linux/OS X
 
         if self.active_pin_pairs[0]:
             pins0 = [p[0] for p in self.active_pin_pairs]
@@ -42,9 +42,11 @@ class LightsThread(threading.Thread):
             print(''.join([('*' if i in pins1 else '_') for i in range(1, 9)]))
         for pair in self.active_pin_pairs:
             if self.last_pair:
-                print('LED({}).off() LED({}).off()'.format(self.last_pair[0], self.last_pair[1]))
+                # print('LED({}).off() LED({}).off()'.format(self.last_pair[0], self.last_pair[1]))
+                pass
             if self.active_pin_pairs[0]:
-                print('LED({}).on()  LED({}).on()'.format(pair[0], pair[1]))
+                # print('LED({}).on()  LED({}).on()'.format(pair[0], pair[1]))
+                pass
             # self.last_pair[0].off()
             # self.last_pair[1].off()
             # pair[0].on()

@@ -3,7 +3,7 @@ from time import time
 entry = {
     'priority': 5,
     'startTime': time(),
-    'endTime': time() + 6000, 
+    'endTime': time() + 6,
     'repeat': True,
     'signals': [
         {
