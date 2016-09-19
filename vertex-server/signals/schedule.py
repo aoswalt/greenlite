@@ -46,6 +46,10 @@ class ScheduleThread(threading.Thread):
         while True:
             entry = disabled_pattern
             for e in self.events:
+                if 'expireTime' in e and e['expireTime'] < self.current_time :
+                    self.events.remove(e)
+
+            for e in self.events:
                 if 'startTime' in e and self.current_time < e['startTime']:
                     continue
 
