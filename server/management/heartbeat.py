@@ -10,10 +10,10 @@ def start():
     global thread
     if thread: return
 
-    thread = HeartBeatThread()
+    thread = HeartbeatThread()
     thread.start()
 
-class HeartBeatThread(threading.Thread):
+class HeartbeatThread(threading.Thread):
 
     def run(self):
         self.beat_time = 5
@@ -25,7 +25,10 @@ class HeartBeatThread(threading.Thread):
             time.sleep(self.beat_time)
 
     def ping_device(self, device):
-        r = requests.get(device['address'])
-        if r.status_code == 200:
-            device['last_seen'] = time.time()
-        print(r.text)
+        try:
+            r = requests.get(device['address'])
+            if r.status_code == 200:
+                device['last_seen'] = time.time()
+            print(r.text)
+        except (requests.exceptions.ConnectionError):
+            print('ERROR: Could not connect to {} @ {}'.format(device['label'], device['address']))
