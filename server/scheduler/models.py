@@ -1,12 +1,12 @@
+import time
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 
 class Vertex(models.Model):
     label = models.CharField(max_length=75)
     address = models.CharField(max_length=75)
     active = models.BooleanField(default=True)
-    last_seen = models.DateTimeField(default=timezone.now)
+    register_time = models.BigIntegerField(default=time.time)
 
     def __str__(self):
         return '{} @ {}'.format(self.label, self.address)

@@ -2,6 +2,7 @@
 import os
 import sys
 import signals
+import heartbeat
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vertex.settings")
@@ -24,6 +25,7 @@ if __name__ == "__main__":
     # start threads for scheduale processing and lighting if not running and on main thread
     if sys.argv[1] == 'runserver' and os.environ.get('RUN_MAIN') != 'true':
         print('Starting threads')
+        heartbeat.heartbeat.start()
         signals.schedule.start()
         signals.lights.start()
 

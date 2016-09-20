@@ -12,7 +12,7 @@ class VertexSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Vertex
-        fields = ('id', 'url', 'label', 'address', 'active', 'last_seen')
+        fields = ('id', 'url', 'label', 'address', 'active', 'register_time')
 
 class EventRequestSerializer(serializers.HyperlinkedModelSerializer):
 

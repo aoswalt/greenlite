@@ -1,3 +1,6 @@
+central_server_address = 'http://localhost:8000/'
+intersection_label = '_unset_'
+
 # light pin definitions
 light_pins = {
   'a1r': (1, 1),

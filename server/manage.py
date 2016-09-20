@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import management
 import os
 import sys
 
@@ -19,4 +20,9 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
+
+    if sys.argv[1] == 'runserver' and os.environ.get('RUN_MAIN') != 'true':
+        print('Starting server threads')
+        management.heartbeat.start()
+
     execute_from_command_line(sys.argv)
