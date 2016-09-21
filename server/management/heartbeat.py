@@ -34,12 +34,12 @@ class HeartbeatThread(threading.Thread):
             r = requests.get(device['address'])
             if r.status_code == 200:
                 device['last_seen'] = time.time()
-                
+
                 # cannot use django models because of import timing
                 with sqlite3.connect(db_path) as conn:
                     c = conn.cursor()
-                    c.execute('UPDATE scheduler_vertex SET last_seen=? WHERE label=?',
-                              (time.time(), device['label']))
+                    c.execute('UPDATE scheduler_vertex SET address=?,last_seen=? WHERE label=?',
+                              (device['address'], time.time(), device['label']))
             print(r.text)
         except (requests.exceptions.ConnectionError):
             print('ERROR: Could not connect to {} @ {}'.format(device['label'], device['address']))
