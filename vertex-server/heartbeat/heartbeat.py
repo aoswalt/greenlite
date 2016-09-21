@@ -1,12 +1,18 @@
 import requests
 import signals
+import socket
 import time
 import threading
+
+def get_network_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return 'http://{}/'.format(s.getsockname()[0])
 
 view_path = 'vertex/'
 headers = {
     'label': signals.config.intersection_label,
-    'address': 'http://localhost:8001'
+    'address': get_network_ip(),
 }
 server_aware = False
 

@@ -3,4 +3,5 @@ bower_components
 client/src/lib
 client/public
 __pycache__
+*.pyc
 db.sqlite3
