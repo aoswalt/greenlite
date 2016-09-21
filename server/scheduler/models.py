@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 class Vertex(models.Model):
-    label = models.CharField(max_length=75)
+    label = models.CharField(unique=True, max_length=75)
     address = models.CharField(max_length=75)
     active = models.BooleanField(default=True)
     last_seen = models.BigIntegerField(default=time.time)

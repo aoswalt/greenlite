@@ -20,8 +20,8 @@ def greet_device(device_label, address):
 
     with sqlite3.connect(db_path) as conn:
         c = conn.cursor()
-        c.execute( ('INSERT OR REPLACE '
-                    'INTO scheduler_vertex(label, address, active, last_seen) '
+        c.execute( ('REPLACE INTO '
+                    'scheduler_vertex(label, address, active, last_seen) '
                     'VALUES(?, COALESCE(( '
                         'SELECT address FROM scheduler_vertex WHERE label=?), '
                         '?), 1, ?)'),
