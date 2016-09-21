@@ -1,5 +1,5 @@
-# central_server_address = 'http://localhost:8000/'
-central_server_address = 'http://10.0.0.21/'
+central_server_address = 'http://localhost:8000/'
+# central_server_address = 'http://10.0.0.21/'
 
 intersection_label = '_unset_'
 

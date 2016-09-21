@@ -1,4 +1,5 @@
 import operator
+from pprint import pprint
 import threading
 import time
 
@@ -139,4 +140,5 @@ def add_event(event, allow_overwrite=False):
     thread.events.append(event)
     thread.sort_events()
 
-    print('thread.events', thread.events)
+    print('thread.events')
+    pprint(thread.events)

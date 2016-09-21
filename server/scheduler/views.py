@@ -2,13 +2,15 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from scheduler.models import *
 from scheduler.serializers import *
+import json
 import management
+import requests
 
-class User(viewsets.ModelViewSet):
+class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class Vertex(viewsets.ModelViewSet):
+class VertexView(viewsets.ModelViewSet):
     queryset = Vertex.objects.all()
     serializer_class = VertexSerializer
 
@@ -18,6 +20,16 @@ class Vertex(viewsets.ModelViewSet):
                                             request.META['HTTP_ADDRESS'])
         return super().list(request)
 
-class EventRequest(viewsets.ModelViewSet):
+class EventRequestView(viewsets.ModelViewSet):
     queryset = EventRequest.objects.all()
     serializer_class = EventRequestSerializer
+
+    def perform_create(self, serializer):
+        event = serializer.save()
+        target_label = event.vertex_target.label
+        target_address = management.mapping.devices[target_label]['address']
+        json_data = json.loads(event.json_text)
+        json_data['signals_text'] = json.dumps(json_data['signals'])
+
+        r = requests.post(target_address + 'event/', data=json_data)
+        print(r.text)

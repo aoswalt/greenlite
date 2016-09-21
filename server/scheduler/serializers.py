@@ -18,4 +18,4 @@ class EventRequestSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EventRequest
-        fields = ('id', 'requester', 'vertex_target', 'timestamp', 'json_text')
+        fields = ('id', 'url', 'requester', 'vertex_target', 'timestamp', 'json_text')
