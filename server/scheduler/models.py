@@ -6,7 +6,7 @@ class Vertex(models.Model):
     label = models.CharField(max_length=75)
     address = models.CharField(max_length=75)
     active = models.BooleanField(default=True)
-    register_time = models.BigIntegerField(default=time.time)
+    last_seen = models.BigIntegerField(default=time.time)
 
     def __str__(self):
         return '{} @ {}'.format(self.label, self.address)
