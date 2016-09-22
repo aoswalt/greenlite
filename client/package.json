@@ -1,12 +1,12 @@
 {
-  "name": "GreenLite",
+  "name": "greenlite",
   "version": "1.0.0",
   "description": "A smart, web-based traffic light system.",
   "main": "index.js",
   "scripts": {
     "build": "gulp build",
     "postinstall": "bower install",
-    "serve": "http-server public",
+    "serve": "gulp connect",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,6 +30,7 @@
     "babel-cli": "^6.14.0",
     "babel-polyfill": "^6.13.0",
     "babel-preset-es2015": "^6.14.0",
+    "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-connect": "^5.0.0",

@@ -1,5 +1,5 @@
 {
-  "name": "GreenLite",
+  "name": "greenlite",
   "description": "A smart, web-based traffic light system.",
   "main": "index.js",
   "authors": [
