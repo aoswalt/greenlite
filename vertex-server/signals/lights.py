@@ -1,6 +1,7 @@
 import os
 import threading
 import time
+from gpiozero import LED
 
 global thread
 thread = None
@@ -21,36 +22,25 @@ class LightsThread(threading.Thread):
     def run(self):
         """The entry point of a thread.start()
         """
+        self.pins = [LED(i) for i in range(28)]
         self.active_pin_pairs = (tuple(),)
         self.last_pair = tuple()
-        self.delay = 0.01
+        self.delay = 0.001
 
         while True:
             self.cycle_active_pins()
-            time.sleep(self.delay * 100)
+            time.sleep(self.delay)
 
     def cycle_active_pins(self):
         """Cycle the LED pins for the active pin pairs
         """
-        # os.system('cls')  # for Windows
-        # os.system('clear')  # for Linux/OS X
-
-        if self.active_pin_pairs[0]:
-            pins0 = [p[0] for p in self.active_pin_pairs]
-            pins1 = [p[1] for p in self.active_pin_pairs]
-            print(''.join([('*' if i in pins0 else '_') for i in range(1, 9)]))
-            print(''.join([('*' if i in pins1 else '_') for i in range(1, 9)]))
         for pair in self.active_pin_pairs:
+            # print('pair', pair)
             if self.last_pair:
-                # print('LED({}).off() LED({}).off()'.format(self.last_pair[0], self.last_pair[1]))
-                pass
-            if self.active_pin_pairs[0]:
-                # print('LED({}).on()  LED({}).on()'.format(pair[0], pair[1]))
-                pass
-            # self.last_pair[0].off()
-            # self.last_pair[1].off()
-            # pair[0].on()
-            # pair[1].on()
+                for pin in pair:
+                    self.pins[pin].off()
+            for pin in pair:
+                self.pins[pin].on()
             self.last_pair = pair
             time.sleep(self.delay)
 
