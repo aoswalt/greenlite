@@ -24,10 +24,13 @@ def greet_device(device_label, address):
 
     with sqlite3.connect(db_path) as conn:
         c = conn.cursor()
-        c.execute( ('REPLACE INTO '
-                    'scheduler_vertex(label, address, enabled, last_seen) '
-                    'VALUES(?, ?, 1, ?)'),
-                  (device_label, address, time.time()))
+        # update or insert if doesn't exist
+        c.execute('UPDATE scheduler_vertex SET address=?, enabled=1, last_seen=? WHERE label=?',
+                  (address, time.time(), device_label))
+        if c.rowcount == 0:
+            c.execute('INSERT INTO scheduler_vertex(address, enabled, last_seen) '
+                      'VALUES(?, 1, ?)',
+                      (address, time.time()))
 
     devices[device_label]['address'] = address
     devices[device_label]['last_seen'] = time.time()
