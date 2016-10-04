@@ -17,15 +17,17 @@ def greet_device(device_label, address):
         print('WARN: Adding new device - {}'.format(device_label))
         device_labels.append(device_label)
         devices[device_label] = {'label':device_label, 'address':'', 'last_seen':0}
+    elif devices[device_label]['address'] != address:
+        print('WARN: Changing device label to {} @ {}'.format(device_label, address))
+        devices[device_label]['address'] = address
+
 
     with sqlite3.connect(db_path) as conn:
         c = conn.cursor()
         c.execute( ('REPLACE INTO '
                     'scheduler_vertex(label, address, enabled, last_seen) '
-                    'VALUES(?, COALESCE(( '
-                        'SELECT address FROM scheduler_vertex WHERE label=?), '
-                        '?), 1, ?)'),
-                  (device_label, device_label, address, time.time()))
+                    'VALUES(?, ?, 1, ?)'),
+                  (device_label, address, time.time()))
 
     devices[device_label]['address'] = address
     devices[device_label]['last_seen'] = time.time()
