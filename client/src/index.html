@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles/main.css">
   </head>
   <body>
-    <ng-include src="'app/nav/nav.html'"></ng-include>
+    <ng-include ng-controller="navCtrl as nav" src="'app/nav/nav.html'"></ng-include>
     <div ng-view></div>
 
     <script src="lib/angular/angular.min.js" charset="utf-8"></script>
@@ -19,5 +19,6 @@
     <script src="app/api.factory.js" charset="utf-8"></script>
     <script src="app/landing/landing.config.js" charset="utf-8"></script>
     <script src="app/landing/landing.ctrl.js" charset="utf-8"></script>
+    <script src="app/nav/nav.ctrl.js" charset="utf-8"></script>
   </body>
 </html>

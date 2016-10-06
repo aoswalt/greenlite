@@ -6,7 +6,7 @@ app.controller('landingCtrl', function(api, $http) {
     let intersections = document.querySelectorAll('.intersection')
 
     api.root
-      .then(root =>$http.get(root.vertex)
+      .then(root => $http.get(root.vertex)
         .then(res => res.data)
         .then(v_list =>
           intersections.forEach(inter => {
