@@ -12,14 +12,28 @@ app.controller('navCtrl', function(api, $http) {
 
   nav.initialize = () => initData.then(data =>
     Object.keys(data).forEach(label => {
-      const labelAddress = vertexList.find(v => v.label == label).address
+      const labelAddress = vertexList.find(v => {
+        return v.label == label
+      }).url
+      console.log("labelAddress", labelAddress)
 
-      $http.post(requestAddress,
-        JSON.stringify({label:labelAddress, json_text:initData[label]})
-      ).then(console.log, console.error)
+      $http.post(requestAddress, {vertex_target:labelAddress, json_text:JSON.stringify(data[label])})
+        .then(console.log, console.error)
     })
   )
 
-  nav.runDemo = () => null;
+  nav.runDemo = () => demoData.then(data =>
+    Object.keys(data).forEach(label => {
+      const labelAddress = vertexList.find(v => {
+        return v.label == label
+      }).url
+      console.log("labelAddress", labelAddress)
+
+      const interData = data[label]
+      interData.expire_time = parseInt(Date.now() / 1000) + 15
+      $http.post(requestAddress, {vertex_target:labelAddress, json_text:JSON.stringify(interData)})
+        .then(console.log, console.error)
+    })
+  )
 
 })
